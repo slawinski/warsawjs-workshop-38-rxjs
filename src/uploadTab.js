@@ -1,5 +1,5 @@
-const { fromEvent, BehaviorSubject } = require('rxjs')
-const { switchMap, map, tap } = require('rxjs/operators')
+const { fromEvent, BehaviorSubject, EMPTY } = require('rxjs')
+const { switchMap, map, tap, catchError } = require('rxjs/operators')
 
 const API_URL = 'http://localhost:3000'
 
@@ -47,6 +47,10 @@ function showUploadTab() {
       tap(() => progress$.next('Creating post..')),
       switchMap(async ({ title, imageId }) => createPost(title, imageId)),
       tap(() => progress$.next('Done.')),
+      catchError(err => {
+        progress$.next(`Error: ${err.message}`)
+        return EMPTY
+      }),
     )
   .subscribe()
 
