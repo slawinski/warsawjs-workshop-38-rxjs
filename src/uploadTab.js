@@ -1,7 +1,7 @@
 const { fromEvent, BehaviorSubject, EMPTY } = require('rxjs')
 const { switchMap, map, tap, catchError } = require('rxjs/operators')
 
-const API_URL = 'http://localhost:3000'
+const API_URL = 'https://warsawjs-workshop-38-backend.herokuapp.com'
 
 async function uploadImage(image) {
   const formData = new FormData()

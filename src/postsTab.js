@@ -30,7 +30,7 @@ function hidePostsTab() {
 }
 
 async function fetchPosts() {
-  const response = await fetch('http://localhost:3000')
+  const response = await fetch('https://warsawjs-workshop-38-backend.herokuapp.com')
   return response.json()
 }
 
