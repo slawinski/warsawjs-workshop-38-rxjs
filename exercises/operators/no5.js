@@ -1,14 +1,8 @@
-const { interval } = require('rxjs')
-const { mapTo } = require('rxjs/operators')
+const { timer } = require('rxjs')
+const { scan } = require('rxjs/operators')
 
-const observable$$ = interval(1000).pipe(mapTo(interval(200)))
+const price$ = timer(0, 700).pipe(
+  scan((acc) => Math.round(acc + Math.random() * 60 - 30), 150),
+)
 
-function flatten(observable$$) {
-  // your implementation here
-  return null
-}
-
-const flattened$ = flatten(observable$$)
-
-flattened$.subscribe(console.log)
-
+price$.subscribe(console.log)
