@@ -1,5 +1,5 @@
-const { fromEvent } = require('rxjs')
-const { switchMap, map } = require('rxjs/operators')
+const { fromEvent, BehaviorSubject } = require('rxjs')
+const { switchMap, map, tap } = require('rxjs/operators')
 
 const API_URL = 'http://localhost:3000'
 
@@ -29,26 +29,37 @@ async function createPost(title, imgId) {
 }
 
 let formSub;
+let progressSub;
 
 function showUploadTab() {
   document.getElementById('upload-tab').classList.remove('hidden')
 
+  const progress$ = new BehaviorSubject('')
+
   formSub = fromEvent(document.getElementById('upload-form'), 'submit')
     .pipe(
       map(e => Object.fromEntries(new FormData(e.target))),
+      tap(() => progress$.next('Uploading image..')),
       switchMap(async ({ title, image }) => {
         const imageId = await uploadImage(image)
         return { title, imageId }
       }),
+      tap(() => progress$.next('Creating post..')),
       switchMap(async ({ title, imageId }) => createPost(title, imageId)),
+      tap(() => progress$.next('Done.')),
     )
   .subscribe()
+
+  progressSub = progress$.subscribe(
+    status => document.getElementById('upload-status').innerHTML = status,
+  )
 }
 
 function hideUploadTab() {
   document.getElementById('upload-tab').classList.add('hidden')
 
   formSub && formSub.unsubscribe()
+  progressSub && progressSub.unsubscribe()
 }
 
 module.exports = {
