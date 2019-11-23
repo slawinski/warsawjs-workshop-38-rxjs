@@ -1,4 +1,6 @@
 require('./index.css')
-const { initTabs } = require('./tabs')
 
-initTabs()
+const { getPosts } = require('./api')
+const { renderPosts } = require('./ui')
+
+getPosts().then(renderPosts)
