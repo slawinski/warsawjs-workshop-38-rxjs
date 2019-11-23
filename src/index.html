@@ -1,0 +1,26 @@
+<html>
+    <head>
+        <title>Photo gallery</title>
+
+        <link href="https://fonts.googleapis.com/css?family=Lato&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        <header>
+            <input class="filter" id="filter" placeholder="filter posts"/>
+            <a id="posts-link">Posts</a>
+            <a id="upload-link">Upload</a>
+        </header>
+        <div class="upload" id="upload-tab">
+            <form id="upload-form">
+                <h1>Upload image</h1>
+                <input name="src" placeholder="paste image url"/>
+                <input name="title" placeholder="give a title title"/>
+                <input type="submit" />
+            </form>
+        </div>
+        <div class="main" id="posts-tab">
+            <p id="status"></p>
+            <div class="posts" id="posts"></div>
+        </div>
+    </body>
+</html>
