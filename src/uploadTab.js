@@ -1,4 +1,5 @@
 const { fromEvent } = require('rxjs')
+const { switchMap, map } = require('rxjs/operators')
 
 const API_URL = 'http://localhost:3000'
 
@@ -32,15 +33,16 @@ let formSub;
 function showUploadTab() {
   document.getElementById('upload-tab').classList.remove('hidden')
 
-  formSub = fromEvent(document.getElementById('upload-form'), 'submit').subscribe(async e => {
-    e.preventDefault();
-    const data = Object.fromEntries(new FormData(e.target));
-    console.log(data)
-    
-    const imgId = await uploadImage(data.image)
-
-    await createPost(data.title, imgId)
-  })
+  formSub = fromEvent(document.getElementById('upload-form'), 'submit')
+    .pipe(
+      map(e => Object.fromEntries(new FormData(e.target))),
+      switchMap(async ({ title, image }) => {
+        const imageId = await uploadImage(image)
+        return { title, imageId }
+      }),
+      switchMap(async ({ title, imageId }) => createPost(title, imageId)),
+    )
+  .subscribe()
 }
 
 function hideUploadTab() {
